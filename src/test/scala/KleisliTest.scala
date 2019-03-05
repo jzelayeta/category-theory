@@ -1,4 +1,8 @@
 import org.scalatest.{FunSuite, Matchers}
+import scalaz.Kleisli
+import scalaz.std.option._
+import scalaz.syntax.bind._
+import scalaz.syntax.std.option._
 
 class KleisliTest extends FunSuite with Matchers {
 
@@ -73,4 +77,13 @@ class KleisliTest extends FunSuite with Matchers {
     safeSqrtAfterSafeReciprocal(0) shouldBe None
     safeSqrtAfterSafeReciprocal(-4) shouldBe None
   }
+
+  /*
+  Use scalaz kleisli implementation
+   */
+  test("scalaz kleisli implementation should return the same result as compose function") {
+    val kleisliSafeRoot: Kleisli[Option, Double, Double] = Kleisli(safe_root)
+    (kleisliSafeRoot <=< kleisliSafeRoot).apply(16) shouldBe compose(safe_root, safe_root)(16)
+  }
+
 }
